@@ -1,0 +1,8 @@
+extends layout
+
+block content
+  h1= title
+  .jobs
+    for job in jobArray
+      p.job= job.name
+        span= job.msg
