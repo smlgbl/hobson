@@ -1,8 +1,8 @@
 var Job = {}
 
-Job.data = 'Hi. My name is: 0'
-Job.name = 'Default Job #1'
-Job.msg = 'This is the default job'
+Job.data = 'Hi. My name is: 1'
+Job.name = 'Default Job #2'
+Job.msg = 'This is the second job'
 Job.enabled = false
 Job.data = ''
 Job.interval = 360000
@@ -13,3 +13,4 @@ Job.func = function( callback ) {
 }
 
 module.exports = Job
+
