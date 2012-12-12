@@ -48,17 +48,25 @@ function updateJobs() {
 			var file = files[f]
 			if( file.substr( file.indexOf('.'), file.length ) == ".js" ) {
 				var job = require('./jobs/' + file )
-				if( job.enabled && job.func ) {
-					console.log( "Calling func from " + job.name)
-					job.func( function( data ) {
-						job.msg = data
-						console.log( "Received data from " + job.name + ", namely: " + data )
-					})
+				if( job.enabled ) {
+					jobs.push( job )
 				}
-				jobs.push( job )
 			}
 		}
 	})
+}
+
+function callJobFuncs() {
+	for( var j in jobs ) {
+		var job = jobs[j]
+		if( job.func ) {
+			console.log( "Calling func of " + job.name)
+			job.func( function( err, data ) {
+				jobs[ j ].msg = data
+				console.log( "Received data from " + jobs[ j ].name + ", namely: " + data )
+			})
+		}
+	}
 }
 
 app.get('/', function(req, res) {
@@ -67,8 +75,7 @@ app.get('/', function(req, res) {
 			jobArray: jobs
 		}
 	)
-}
-)
+})
 
 app.get('/update', function( req, res ) {
 	updateJobs()
@@ -82,4 +89,5 @@ http.createServer(app).listen(app.get('port'), function(){
 })
 
 updateJobs()
+setInterval( callJobFuncs, 10000 )
 
