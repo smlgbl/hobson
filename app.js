@@ -56,15 +56,19 @@ function updateJobs() {
 	})
 }
 
+function callbackWrapper( jobNo ) {
+	return function( err, data ) {
+		jobs[ jobNo].msg = data
+		console.log( "Received data from " + jobs[ jobNo ].name + ", namely: " + data )
+	}
+}
+
 function callJobFuncs() {
 	for( var j in jobs ) {
 		var job = jobs[j]
 		if( job.func ) {
 			console.log( "Calling func of " + job.name)
-			job.func( function( err, data ) {
-				jobs[ j ].msg = data
-				console.log( "Received data from " + jobs[ j ].name + ", namely: " + data )
-			})
+			job.func( callbackWrapper( j ) )
 		}
 	}
 }
