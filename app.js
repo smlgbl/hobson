@@ -61,8 +61,6 @@ function selectJobs( err, files ) {
 			var job = require( name )
 			if( job.enabled ) {
 				jobs.push( job )
-				console.log("Pushing Job " + job.name)
-				console.log("interval: " + job.interval)
 			}
 		}
 	}
@@ -77,7 +75,6 @@ function scheduleJobFuncs() {
 			if( job.interval ) {
 				if( job.intervalId ) clearInterval( job.intervalId )
 				job.intervalId = setInterval( job.func, job.interval, callbackWrapper( j ) )
-				console.log( "Setting interval of " + job.name + " to " + job.interval )
 			}
 		}
 	}
@@ -87,7 +84,6 @@ function callbackWrapper( jobNo ) {
 	return function( err, data ) {
 		var keys = Object.keys( data )
 		for( var key in keys ) {
-			console.log( "Key: " + keys[key] )
 			jobs[ jobNo ][ keys[ key ] ] = data[ keys[ key ] ]
 		}
 	}
