@@ -40,36 +40,52 @@ app.configure('development', function(){
 })
 
 var jobs = []
+
 function updateJobs() {
 	console.log("Updating Jobs ...")
-	fs.readdir( __dirname + '/jobs', function( err, files ) {
-		jobs = []
-		for( var f in files ) {
-			var file = files[f]
-			if( file.substr( file.indexOf('.'), file.length ) == ".js" ) {
-				var job = require('./jobs/' + file )
-				if( job.enabled ) {
-					jobs.push( job )
-				}
+	fs.readdir( __dirname + '/jobs', selectJobs )
+}
+
+function unrequire( moduleName ) {
+	var jobDefName = require.resolve(moduleName)
+	delete require.cache[ jobDefName ]
+}
+
+function selectJobs( err, files ) {
+	jobs = []
+	for( var f in files ) {
+		var file = files[f]
+		if( file.substr( file.indexOf('.'), file.length ) == ".js" ) {
+			var name = './jobs/' + file
+			unrequire( name )
+			var job = require( name )
+			if( job.enabled ) {
+				jobs.push( job )
+				console.log("Pushing Job " + job.name)
+				console.log("interval: " + job.interval)
 			}
 		}
-	})
+	}
+	scheduleJobFuncs()
+}
+
+function scheduleJobFuncs() {
+	for( var j in jobs ) {
+		var job = jobs[j]
+		if( job.func ) {
+			job.func( callbackWrapper( j ) )
+			if( job.interval ) {
+				if( job.intervalId ) clearInterval( job.intervalId )
+				job.intervalId = setInterval( job.func, job.interval, callbackWrapper( j ) )
+				console.log( "Setting interval of " + job.name + " to " + job.interval )
+			}
+		}
+	}
 }
 
 function callbackWrapper( jobNo ) {
 	return function( err, data ) {
-		jobs[ jobNo].msg = data
-		console.log( "Received data from " + jobs[ jobNo ].name + ", namely: " + data )
-	}
-}
-
-function callJobFuncs() {
-	for( var j in jobs ) {
-		var job = jobs[j]
-		if( job.func ) {
-			console.log( "Calling func of " + job.name)
-			job.func( callbackWrapper( j ) )
-		}
+		jobs[ jobNo ].msg = data
 	}
 }
 
@@ -93,5 +109,3 @@ http.createServer(app).listen(app.get('port'), function(){
 })
 
 updateJobs()
-setInterval( callJobFuncs, 10000 )
-

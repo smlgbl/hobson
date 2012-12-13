@@ -2,7 +2,9 @@ extends layout
 
 block content
   h1= title
+  .updateLink
+    a(href='/update') update
   .jobs
     for job in jobArray
-      p.job= job.name
-        span= job.msg
+      h2.job= job.name
+      p.jobMsg= job.msg

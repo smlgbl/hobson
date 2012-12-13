@@ -6,7 +6,7 @@ Job.name = "Day's text"
 Job.msg = 'day text'
 Job.enabled = true
 Job.data = 
-Job.interval = 360000
+Job.interval = 1000*60*60*24
 Job.func = function( callback ) {
 	var job  = new nodeio.Job({
 		input:	[ new Date() ],

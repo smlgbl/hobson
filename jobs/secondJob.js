@@ -5,10 +5,10 @@ Job.name = 'Default Job #2'
 Job.msg = 'This is the second job'
 Job.enabled = true
 Job.data = ''
-Job.interval = 360000
+Job.interval = 10000
 Job.func = function( callback ) {
 	var date = new Date()
-	Job.data += ' - ' + date.toString()
+	Job.data = ' - ' + date.toString()
 	callback( null, Job.data )
 }
 
