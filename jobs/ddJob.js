@@ -5,7 +5,7 @@ Job.data = 'Hi. My name is: 1'
 Job.name = "Day's text"
 Job.msg = 'day text'
 Job.enabled = true
-Job.data = 
+Job.status = 'building'
 Job.interval = 1000*60*60*24
 Job.func = function( callback ) {
 	var job  = new nodeio.Job({
@@ -21,16 +21,19 @@ Job.func = function( callback ) {
 						this.emit(err)
 					} else {
 						var t = $('p.sa').fulltext
-//						var c = $('p.sb').fulltext
-						this.emit( t )
-//						this.emit( c )
+						var c = $('p.sb').fulltext
+						callback( null, {
+							msg: t,
+							msg2: c,
+							status: 'success'
+						})
 					}
 				}
 			)
 		}
 	})
 	
-	nodeio.start( job, { silent: true }, callback, true)
+	nodeio.start( job, { silent: true })
 }
 module.exports = Job
 

@@ -6,5 +6,6 @@ block content
     a(href='/update') update
   .jobs
     for job in jobArray
-      h2.job= job.name
-      p.jobMsg= job.msg
+      div(class=job.status)
+        h1.job= job.name
+        p.jobMsg= job.msg

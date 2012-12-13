@@ -85,7 +85,11 @@ function scheduleJobFuncs() {
 
 function callbackWrapper( jobNo ) {
 	return function( err, data ) {
-		jobs[ jobNo ].msg = data
+		var keys = Object.keys( data )
+		for( var key in keys ) {
+			console.log( "Key: " + keys[key] )
+			jobs[ jobNo ][ keys[ key ] ] = data[ keys[ key ] ]
+		}
 	}
 }
 
