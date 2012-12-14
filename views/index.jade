@@ -1,8 +1,6 @@
 extends layout
 
 block content
-  h1.updateLink
-    a(href='/update')= title
   .jobs
     for job in jobArray
       div(id="job_#{job.id}",class="job #{ job.status }",style='height: '+ (100/jobArray.length) + '%')
