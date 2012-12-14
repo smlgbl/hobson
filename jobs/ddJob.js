@@ -3,10 +3,11 @@ var Job = {}
 
 Job.data = 'Hi. My name is: 1'
 Job.name = "Day's text"
-Job.msg = 'day text'
+Job.msg = 'fetching from jw.org ...'
 Job.enabled = true
 Job.status = 'building'
 Job.interval = 1000*60*60*24
+Job.timestamp = ''
 Job.func = function( callback ) {
 	var job  = new nodeio.Job({
 		input:	[ new Date() ],
@@ -25,7 +26,8 @@ Job.func = function( callback ) {
 						callback( null, {
 							msg: t,
 							msg2: c,
-							status: 'success'
+							status: 'success',
+							timestamp: date
 						})
 					}
 				}

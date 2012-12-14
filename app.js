@@ -43,6 +43,7 @@ var jobs = []
 
 function updateJobs() {
 	console.log("Updating Jobs ...")
+	clearJobFuncSchedule()
 	fs.readdir( __dirname + '/jobs', selectJobs )
 }
 
@@ -60,7 +61,7 @@ function selectJobs( err, files ) {
 			unrequire( name )
 			var job = require( name )
 			if( job.enabled ) {
-				jobs.push( job )
+				job.id = jobs.push( job )
 			}
 		}
 	}
@@ -77,6 +78,14 @@ function scheduleJobFuncs() {
 				job.intervalId = setInterval( job.func, job.interval, callbackWrapper( j ) )
 			}
 		}
+	}
+}
+
+function clearJobFuncSchedule() {
+	for( var j in jobs ) {
+		var job = jobs[j]
+		if( job.intervalId )
+			clearInterval( job.intervalId )
 	}
 }
 

@@ -1,11 +1,20 @@
 extends layout
 
 block content
-  h1= title
-  .updateLink
-    a(href='/update') update
+  h1.updateLink
+    a(href='/update')= title
   .jobs
     for job in jobArray
-      div(class=job.status)
-        h1.job= job.name
-        p.jobMsg= job.msg
+      div(id="job_#{job.id}",class="job #{ job.status }",style='height: '+ (100/jobArray.length) + '%')
+        #jobContent.content
+          - if(job.msg2)
+            h1
+              a(href='#jobMsg2_#{job.id}') #{job.name}
+          - else
+            h1 #{job.name}
+          - if(job.timestamp)
+            div(id="timestamp_#{job.id}",class="timestamp") #{ job.timestamp }
+          p#jobMsg= job.msg
+          - if(job.msg2)
+            div(id="jobMsg2_#{job.id}",class="jobMsg2")
+              a(href='#')= job.msg2

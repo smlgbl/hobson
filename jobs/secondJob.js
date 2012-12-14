@@ -8,8 +8,8 @@ Job.status = 'building'
 Job.interval = 10000
 Job.func = function( callback ) {
 	var date = new Date()
-	var msg = ' - ' + date.toString()
-	var status = 'success'
+	var msg = date.toString()
+	var status = 'failure'
 	callback( null, { msg: msg, status: status } )
 }
 

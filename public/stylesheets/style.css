@@ -1,20 +1,14 @@
+html {
+  height: 100%;
+}
+
 body {
   text-align: center;
-  font-size: small;
-  margin: 0;
-  font-family: 'Helvetica Neue', sans-serif;
-  background-color: #93F58E;
-}
-
-div.status {
   margin: 0;
   padding: 0;
-  position: relative;
-}
-
-div.content {
-  position: absolute;
-  top: 50%;
+  font-family: 'Helvetica Neue', sans-serif;
+  background-color: #93F58E;
+  height: 100%;
   width: 100%;
 }
 
@@ -34,30 +28,25 @@ p {
   line-height: 1.6em;
 }
 
-p.building {
-  right: 0;
-  top: 0;
-  position: absolute;
-  margin: 3px;
-  padding: 2px 5px;
-  background-color: #444;
-  color: #ff4;
-  z-index: 1;
-  font-size: 100%;
-}
-
 a {
   text-decoration: none;
   color: inherit;
 }
 
-.clear {
-  border: none;
-  clear: both;
+.jobs {
+  height: 80%;
+  width: 100%;
+  margin: 0;
 }
 
-.status {
-  float: left;
+.job {
+  position: relative;
+}
+
+.content {
+  position: absolute;
+  top: 20%;
+  width: 100%;
 }
 
 .success {
@@ -98,4 +87,16 @@ a {
 
 .building.failure strong {
   color: #990000;
+}
+
+.jobMsg2 {
+  display: none;
+}
+
+.jobMsg2:target {
+  display: block;
+}
+
+.timestamp {
+  display: none
 }
