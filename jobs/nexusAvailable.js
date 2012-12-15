@@ -15,12 +15,23 @@ Job.func = function( callback ) {
 				'https://play.google.com/store/devices/details?id=nexus_4_16gb',
 				function( err, $ ) {
 					if(err) {
-						callback(err, null)
+						callback(err, {
+							msg: err,
+							status: 'failure',
+							timestamp: new Date()
+						})
 					} else {
 						// this is fragile, because when it is available, this span doesn't exist!
-						var t = $('span.hardware-price-description').fulltext
+						var available = false
+						try {
+							$('form#buy-hardware-form').each( function (form) {
+								available = true
+							})
+						} catch( err ) {
+							console.log( "Error getting form selector: " + err )
+						}
 						callback( null, {
-							msg: t,
+							msg: ( available ) ? "Available" : "Sold out",
 							status: 'success',
 							timestamp: new Date()
 						})
