@@ -1,7 +1,7 @@
 var request = require('request')
 var user = 'username'
 var pass = 'password'
-var url = 'http://' + user + ':' + pass + '@ci.example.com/job/Unittests/lastBuild/api/json'
+var url = 'http://' + user + ':' + pass + '@jenkins.example.com/job/Branch/lastBuild/api/json'
 
 var Job = {}
 
@@ -20,6 +20,8 @@ Job.func = function( callback ) {
 			Job.msg = ''
 			apiResp = JSON.parse( body, checkData )
 		}
+		if( resp.statusCode != 200 )
+			Job.msg = "Error fetching data: " + resp.statusCode
 	})
 	callback( null, { msg: Job.msg, status: Job.status, timestamp: Job.timestamp } )
 }
