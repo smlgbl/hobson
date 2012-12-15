@@ -21,14 +21,13 @@ Job.func = function( callback ) {
 							timestamp: new Date()
 						})
 					} else {
-						// this is fragile, because when it is available, this span doesn't exist!
 						var available = false
 						try {
 							$('form#buy-hardware-form').each( function (form) {
 								available = true
 							})
 						} catch( err ) {
-							console.log( "Error getting form selector: " + err )
+							console.log( err )
 						}
 						callback( null, {
 							msg: ( available ) ? "Available" : "Sold out",

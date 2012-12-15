@@ -19,7 +19,11 @@ Job.func = function( callback ) {
 				'http://wol.jw.org/en/wol/dt/r1/lp-e/' + today,
 				function( err, $ ) {
 					if(err) {
-						this.emit(err)
+						callback(err, {
+							msg: err,
+							status: 'failure',
+							timestamp: date
+						})
 					} else {
 						var t = $('p.sa').fulltext
 						var c = $('p.sb').fulltext
