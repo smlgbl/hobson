@@ -17,6 +17,7 @@ Job.func = function( callback ) {
 					if(err) {
 						callback(err, null)
 					} else {
+						// this is fragile, because when it is available, this span doesn't exist!
 						var t = $('span.hardware-price-description').fulltext
 						callback( null, {
 							msg: t,
