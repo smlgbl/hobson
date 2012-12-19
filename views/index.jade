@@ -3,12 +3,9 @@ extends layout
 block content
   .jobs
     for job in jobArray
-      div(id="job_#{job.id}",class="job #{ job.status }",style=((jobArray.length>6)?'float: left; width: 50%; height: ' + (200/( ( jobArray.length % 2 == 1 ) ? jobArray.length + 1 : jobArray.length )) + '%;' : 'width: 100%; height: ' + (100/jobArray.length) + '%;'))
+      div(id="job_#{job.id}",class="job #{ job.status }",style=((jobArray.length>3)?'float: left; width: 50%; height: ' + (200/( ( jobArray.length % 2 == 1 ) ? jobArray.length + 1 : jobArray.length )) + '%;' : 'width: 100%; height: ' + (100/jobArray.length) + '%;'))
         #jobContent.content
-          - if(job.msg2)
-            h1
-              a(href='#jobMsg2_#{job.id}') #{job.name}
-          - else if(job.url)
+          - if(job.url)
             h1 
               a(href=job.url) #{job.name}
           - else
