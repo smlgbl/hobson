@@ -59,9 +59,13 @@ function selectJobs( err, files ) {
 		if( file.substr( file.indexOf('.'), file.length ) == ".js" ) {
 			var name = './jobs/' + file
 			unrequire( name )
-			var job = require( name )
-			if( job.enabled ) {
-				job.id = jobs.push( job )
+			var newJobs = require( name )
+			if( ! Array.isArray( newJobs ) ) newJobs = [ newJobs ]
+			for( var j in newJobs ) {
+				var job = newJobs[ j ]
+				if( job.enabled ) {
+					job.id = jobs.push( job )
+				}
 			}
 		}
 	}

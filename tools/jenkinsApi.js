@@ -83,7 +83,7 @@ API.getMsg = function( json, callback ) {
 	
 	if( changes.length > 0 ) {
 		msg = changes.join('<br />')
-	} else {
+	} else if( user.length > 0 ){
 		msg = user + " built " + branch
 		if( node.length > 0 )
 			msg += " on " + node
@@ -94,8 +94,10 @@ API.getMsg = function( json, callback ) {
 	
 	if( json.result && typeof json.result === 'string' )
 		status = json.result.toLowerCase()
-	else if( json.building && json.building === true )
+	else if( json.building && json.building === true ) {
 		status = "building"
+		if( msg === '' ) msg = "Building ..."
+	}
 	
 	if( json.timestamp && typeof json.timestamp === 'string' )
 		timestamp = json.timestamp
