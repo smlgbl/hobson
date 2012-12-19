@@ -54,52 +54,46 @@ function unrequire( moduleName ) {
 
 function selectJobs( err, files ) {
 	jobs = []
-	for( var f in files ) {
-		var file = files[f]
+	files.forEach( function( file, index, array ) {
 		if( file.substr( file.indexOf('.'), file.length ) == ".js" ) {
 			var name = './jobs/' + file
 			unrequire( name )
 			var newJobs = require( name )
 			if( ! Array.isArray( newJobs ) ) newJobs = [ newJobs ]
-			for( var j in newJobs ) {
-				var job = newJobs[ j ]
+			newJobs.forEach( function( job, index, array ) {
 				if( job.enabled ) {
 					job.id = jobs.push( job )
 				}
-			}
+			})
 		}
-	}
+	})
 	scheduleJobFuncs()
 }
 
 function scheduleJobFuncs() {
-	for( var j in jobs ) {
-		var job = jobs[j]
+	jobs.forEach( function( job, index, array ) {
 		if( job.func ) {
-			job.func( callbackWrapper( j ) )
+			job.func( callbackWrapper( index ) )
 			if( job.interval ) {
 				if( job.intervalId ) clearInterval( job.intervalId )
-				job.intervalId = setInterval( job.func, job.interval, callbackWrapper( j ) )
+				job.intervalId = setInterval( job.func, job.interval, callbackWrapper( index ) )
 			}
 		}
-	}
+	})
 }
 
 function clearJobFuncSchedule() {
-	for( var j in jobs ) {
-		var job = jobs[j]
+	jobs.forEach( function( job, index, array ) {
 		if( job.intervalId )
 			clearInterval( job.intervalId )
-	}
+	})
 }
 
 function callbackWrapper( jobNo ) {
 	return function( err, data ) {
-		var keys = Object.keys( data )
-		for( var k in keys ) {
-			key = keys[ k ]
+		Object.keys( data ).forEach( function( key, index, array ) {
 			jobs[ jobNo ][ key ] = data[ key ]
-		}
+		})
 	}
 }
 

@@ -4,10 +4,11 @@ var request = require('request')
 
 var Jobs = []
 module.exports = Jobs
-for( var c in configs ) {
-	job = getJob( configs[c])
+
+configs.forEach( function( config, index, array ) {
+	job = getJob( config )
 	Jobs.push( job )
-}
+})
 
 function getJob( config ) {
 		var Job = {}
