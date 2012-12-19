@@ -19,7 +19,7 @@ API.getMsg = function( json, callback ) {
 		&& typeof json.changeSet.items === 'object' 
 		&& Array.isArray( json.changeSet.items )
 	) {
-		json.changeSet.items.forEach( function( cs, index, array ) {
+		json.changeSet.items.forEach( function( cs ) {
 			if( 
 				  cs.user 
 				  && typeof cs.user === 'string' 
@@ -41,13 +41,13 @@ API.getMsg = function( json, callback ) {
 		&& typeof json.actions === 'object' 
 		&& Array.isArray( json.actions ) 
 	) {
-		json.actions.forEach( function( xvalue, index, array ) {
-			Object.keys( xvalue ).forEach( function( m, index, array ) {
+		json.actions.forEach( function( xvalue ) {
+			Object.keys( xvalue ).forEach( function( m ) {
 				var mvalue = xvalue[ m ]
 				switch( m ) {
 					case "parameters":
 						if( mvalue && Array.isArray( mvalue ) ) {
-							mvalue.forEach( function( yvalue, index, array ) {
+							mvalue.forEach( function( yvalue ) {
 								if( yvalue 
 									&& yvalue.name 
 									&& ( yvalue.name == "SVN_BRANCH" || yvalue.name == "BRANCH" ) 
@@ -61,7 +61,7 @@ API.getMsg = function( json, callback ) {
 						break
 					case "causes":
 						if( mvalue && Array.isArray( mvalue ) ) {
-							mvalue.forEach( function( zvalue, index, array ) {
+							mvalue.forEach( function( zvalue ) {
 								if( 
 									zvalue
 									&& zvalue.userName

@@ -6,30 +6,28 @@ var Jobs = []
 module.exports = Jobs
 
 configs.forEach( function( config, index, array ) {
-	job = getJob( config )
-	Jobs.push( job )
+	Jobs.push( new jenkinsJob( config ) )
 })
 
-function getJob( config ) {
-		var Job = {}
-		Job.url = config.url
-		Job.msg = 'Checking status ...'
-		Job.enabled = config.enabled
-		Job.interval = config.interval
-		Job.data = { msg: Job.msg, status: Job.status, timestamp: Job.timestamp }
-		Job.func = function( callback ) {
-			request( config.url.replace( /(http:\/\/)/, "$1" + config.user + ":" + config.pass + "@" ) + "/lastBuild/api/json"
-				, function( err, resp, body ) {
-				if(!err && resp.statusCode == 200 ) {
-					jenkinsApi.getMsg( JSON.parse( body ), function(data) { callback( null, data ) } )
-				}
-				if( resp.statusCode != 200 ) {
-					Job.msg = "Error fetching data: " + resp.statusCode
-					Job.status = "failure"
-					callback( null, { msg: Job.msg, status: Job.status } )
-				}
-			})
-		}
-		return Job
+function jenkinsJob( config ) {
+	this.name = config.url.substring( config.url.lastIndexOf("/" + 1 ))
+	this.url = config.url
+	this.msg = "Checking status ..."
+	this.enabled = config.enabled
+	this.interval = config.interval
+	this.data = { msg: this.msg, status: "building", timestamp: new Date() }
+	this.func = function( callback ) {
+		request( config.url.replace( /(http:\/\/)/, "$1" + config.user + ":" + config.pass + "@" ) + "/lastBuild/api/json"
+			, function( err, resp, body ) {
+			if(!err && resp.statusCode == 200 ) {
+				jenkinsApi.getMsg( JSON.parse( body ), function(data) { callback( null, data ) } )
+			}
+			if( resp.statusCode != 200 ) {
+				this.msg = "Error fetching data: " + resp.statusCode
+				this.status = "failure"
+				callback( null, { msg: this.msg, status: this.status, timestamp: new Date() } )
+			}
+		})
 	}
 
+}
