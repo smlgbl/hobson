@@ -13,20 +13,28 @@ API.getMsg = function( json, callback ) {
 
 	// in our setup, the first two of these if's should be mutually exclusive ... I might be wrong, though
 	if( 
-			json.changeSet 
-			&& typeof json.changeSet === 'object' 
-			&& json.changeSet.items 
-			&& typeof json.changeSet.items === 'object' 
-			&& Array.isArray( json.changeSet.items )
-	  ) {
-		  json.changeSet.items.forEach( function( cs, index, array ) {
-			  if( cs.user && typeof cs.user === 'string' ) {
-				  cUser = cs.user
-			  } else if ( cs.author && typeof cs.author === 'object' && cs.author.fullName && typeof cs.author.fullName === 'string' ) {
-				  cUser = cs.author.fullName
-			  }
-			  changes.push( cUser + ": " + cs.msg)
-		  })
+		json.changeSet 
+		&& typeof json.changeSet === 'object' 
+		&& json.changeSet.items 
+		&& typeof json.changeSet.items === 'object' 
+		&& Array.isArray( json.changeSet.items )
+	) {
+		json.changeSet.items.forEach( function( cs, index, array ) {
+			if( 
+				  cs.user 
+				  && typeof cs.user === 'string' 
+			) {
+				cUser = cs.user
+			} else if ( 
+				cs.author 
+				&& typeof cs.author === 'object' 
+				&& cs.author.fullName 
+				&& typeof cs.author.fullName === 'string' 
+			) {
+				cUser = cs.author.fullName
+			}
+			changes.push( cUser + ": " + cs.msg)
+		})
 	}
 	if( 
 		json.actions 
@@ -34,17 +42,17 @@ API.getMsg = function( json, callback ) {
 		&& Array.isArray( json.actions ) 
 	) {
 		json.actions.forEach( function( xvalue, index, array ) {
-			for( var m in xvalue ) {
-				var mvalue = xvalue[m]
+			Object.keys( xvalue ).forEach( function( m, index, array ) {
+				var mvalue = xvalue[ m ]
 				switch( m ) {
 					case "parameters":
 						if( mvalue && Array.isArray( mvalue ) ) {
 							mvalue.forEach( function( yvalue, index, array ) {
 								if( yvalue 
-										&& yvalue.name 
-										&& ( yvalue.name == "SVN_BRANCH" || yvalue.name == "BRANCH" ) 
-										&& yvalue.value 
-										&& typeof yvalue.value 
+									&& yvalue.name 
+									&& ( yvalue.name == "SVN_BRANCH" || yvalue.name == "BRANCH" ) 
+									&& yvalue.value 
+									&& typeof yvalue.value 
 								) {
 									  branch = yvalue.value.replace( /(branches\/)|(origin\/)/g, '' )
 								}
@@ -65,7 +73,7 @@ API.getMsg = function( json, callback ) {
 						}
 						break
 				}
-			}
+			})
 		})
 	}
 	if( json.builtOn
