@@ -7,6 +7,7 @@ API.getMsg = function( json, callback ) {
 	var branch = ''
 	var node = ''
 	var msg = ''
+	var msg2 = ''
 	var status = ''
 	var timestamp = ''
 	var name = ''
@@ -84,10 +85,17 @@ API.getMsg = function( json, callback ) {
 	}
 
 	// Now build a meaningful string
+	var linebreak = '<br />'
 	
-	if( changes.length > 0 ) {
-		msg = changes.join('<br />')
-	} else if( user.length > 0 ){
+	if( changes.length > 0 && changes.length < 3 ) {
+		msg = changes.join( linebreak )
+	} else if( changes.length >= 3 ) {
+		msg = changes.slice( 0, 3 ).join( linebreak )
+		msg2 = changes.slice( 3 ).join( linebreak )
+	}
+	
+	// user overrides changes ...
+	if( user.length > 0 && branch.length ){
 		msg = user + " built " + branch
 		if( node.length > 0 )
 			msg += " on " + node
@@ -109,6 +117,7 @@ API.getMsg = function( json, callback ) {
 	callback( {
 		name: name,
 		msg: msg,
+		msg2: msg2,
 		status: status,
 		timestamp: timestamp
 	} )

@@ -2,6 +2,7 @@ var fs = require('fs')
 var jobHandler = {}
 jobHandler.jobs = []
 jobHandler.updateJobs = updateJobs
+jobHandler.getJobById = getJobById
 
 module.exports = jobHandler
 
@@ -31,7 +32,7 @@ function selectJobs( err, files ) {
 			if( ! Array.isArray( newJobs ) ) newJobs = [ newJobs ]
 			newJobs.forEach( function( job ) {
 				if( job.enabled ) {
-					job.id = jobHandler.jobs.push( job )
+					job.id = jobHandler.jobs.push( job ) - 1
 				}
 			})
 		}
@@ -66,4 +67,15 @@ function callbackWrapper( jobNo ) {
 	}
 }
 
-
+function getJobById( id, callback ) {
+	if( id >= jobHandler.jobs.length ) callback( null )
+	else {
+		jobHandler.jobs.some( function( job ) {
+			if( job.id === id ) {
+				console.log("Job " + job.name + " has id " + id )
+				callback( job )
+				return true
+			}
+		})
+	}
+}

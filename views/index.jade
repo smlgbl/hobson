@@ -15,7 +15,8 @@ block content
             h1 #{job.name}
           - if(job.timestamp)
             div(id="timestamp_#{job.id}",class="timestamp") #{ job.timestamp }
-          p#jobMsg!= job.msg
           - if(job.msg2)
-            div(id="jobMsg2_#{job.id}",class="jobMsg2")
-              a(href='#')= job.msg2
+            a(href='/detail/' + job.id,id="jobMsg")!= job.msg
+            ...
+          - else
+            p!= job.msg

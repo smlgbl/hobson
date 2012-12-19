@@ -47,6 +47,14 @@ app.get('/', function(req, res) {
 	)
 })
 
+app.get('/detail/:id', function( req, res ) {
+	if( req.params.id >= jobHandler.jobs.length ) {
+		res.redirect('/')
+	} else {
+		res.render( 'detail', { title: "Job's details", job: jobHandler.jobs[ req.params.id ] } )
+	}
+})
+
 app.get('/update', function( req, res ) {
 	jobHandler.updateJobs()
 	res.redirect('/')
