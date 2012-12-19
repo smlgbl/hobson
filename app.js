@@ -58,7 +58,12 @@ function selectJobs( err, files ) {
 		if( file.substr( file.indexOf('.'), file.length ) == ".js" ) {
 			var name = './jobs/' + file
 			unrequire( name )
-			var newJobs = require( name )
+			try {
+				var newJobs = require( name )
+			} catch(err) {
+				console.log("Error loading " + file)
+				return
+			}
 			if( ! Array.isArray( newJobs ) ) newJobs = [ newJobs ]
 			newJobs.forEach( function( job, index, array ) {
 				if( job.enabled ) {
