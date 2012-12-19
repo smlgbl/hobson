@@ -92,8 +92,9 @@ function clearJobFuncSchedule() {
 function callbackWrapper( jobNo ) {
 	return function( err, data ) {
 		var keys = Object.keys( data )
-		for( var key in keys ) {
-			jobs[ jobNo ][ keys[ key ] ] = data[ keys[ key ] ]
+		for( var k in keys ) {
+			key = keys[ k ]
+			jobs[ jobNo ][ key ] = data[ key ]
 		}
 	}
 }

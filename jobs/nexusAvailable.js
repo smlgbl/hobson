@@ -27,7 +27,7 @@ Job.func = function( callback ) {
 								available = true
 							})
 						} catch( err ) {
-							console.log( err )
+//							console.log( err )
 						}
 						callback( null, {
 							msg: ( available ) ? "Available" : "Sold out",
