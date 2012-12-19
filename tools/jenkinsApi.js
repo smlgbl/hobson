@@ -94,6 +94,8 @@ API.getMsg = function( json, callback ) {
 	
 	if( json.result && typeof json.result === 'string' )
 		status = json.result.toLowerCase()
+	else if( json.building && json.building === true )
+		status = "building"
 	
 	if( json.timestamp && typeof json.timestamp === 'string' )
 		timestamp = json.timestamp
