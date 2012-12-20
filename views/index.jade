@@ -7,13 +7,13 @@ block content
         #jobContent.content
           - if(job.url)
             h1 
-              a(href=job.url) #{job.name}
+              a(href=job.url,id='name_#{job.id}')= job.name
           - else
-            h1 #{job.name}
+            h1(id='name_#{job.id}')= job.name
           - if(job.timestamp)
-            div(id="timestamp_#{job.id}",class="timestamp") #{ job.timestamp }
+            div(id="timestamp_#{job.id}",class="timestamp")= job.timestamp
           - if(job.msg2)
-            a(href='/detail/' + job.id,id="jobMsg")!= job.msg
+            a(href='/detail/' + job.id,id='msg_' + job.id)!= job.msg
             ...
           - else
-            p!= job.msg
+            p(id='msg_' + job.id)!= job.msg

@@ -4,6 +4,25 @@ html
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css', type='text/css')
     link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:regular,bold', type='text/css')
-    meta(http-equiv='refresh', content='15')
+    script(src='/socket.io/socket.io.js')
+    script(type='text/javascript')
+      var socket = io.connect()
+      socket.on('news', function( data ) {
+        var arr = ['name', 'msg', 'timestamp', 'msg2', 'url']
+        arr.forEach( function(key){
+          if( data[key] ) {
+            replaceContent( key + '_' + data.id, data[key] )
+          }
+        })
+        if( data['status'] ) changeClass( 'job_' + data.id, data.status )
+      })
+      function replaceContent( id, content ) {
+        var container = document.getElementById( id )
+        if( container ) container.innerHTML = content
+      }
+      function changeClass( id, newClass ) {
+        var container = document.getElementById( id )
+        if( container ) container.className = 'job ' + newClass
+      }
   body
     block content

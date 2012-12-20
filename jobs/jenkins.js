@@ -15,7 +15,6 @@ function jenkinsJob( config ) {
 	this.msg = "Checking status ..."
 	this.enabled = config.enabled
 	this.interval = config.interval
-	this.data = { msg: this.msg, status: "building", timestamp: new Date() }
 	this.func = function( callback ) {
 		request( config.url.replace( /(http:\/\/)/, "$1" + config.user + ":" + config.pass + "@" ) + "/lastBuild/api/json"
 			, function( err, resp, body ) {

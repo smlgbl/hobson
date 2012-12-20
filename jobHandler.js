@@ -3,8 +3,14 @@ var jobHandler = {}
 jobHandler.jobs = []
 jobHandler.updateJobs = updateJobs
 jobHandler.getJobById = getJobById
+jobHandler.callback = function() {}
+jobHandler.setCallback = setCallback
 
 module.exports = jobHandler
+
+function setCallback( callback ) {
+	jobHandler.callback = callback
+}
 
 function updateJobs() {
 	console.log("Updating Jobs ...")
@@ -61,9 +67,19 @@ function clearJobFuncSchedule() {
 
 function callbackWrapper( jobNo ) {
 	return function( err, data ) {
+		var news = false
 		Object.keys( data ).forEach( function( key ) {
-			jobHandler.jobs[ jobNo ][ key ] = data[ key ]
+			var oldData = jobHandler.jobs[ jobNo ][ key ]
+			var newData = data[ key ]
+			if( 
+				( ! oldData && newData.length > 0 ) 
+				  || ( oldData && oldData != newData ) ) {
+				news = true
+				jobHandler.jobs[ jobNo ][ key ] = newData
+			}
 		})
+		if( news )
+			jobHandler.callback( jobHandler.jobs[ jobNo ] )
 	}
 }
 

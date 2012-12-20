@@ -1,11 +1,11 @@
 var express = require('express'),
+	app = express(),
 	http = require('http'),
+	server = http.createServer(app),
 	path = require('path'),
-	MemoryStore = express.session.MemoryStore,
 	helmet = require('helmet'),
-	jobHandler = require('./jobHandler')
-
-var app = express()
+	jobHandler = require('./jobHandler'),
+	io = require('socket.io').listen(server)
 
 app.configure(function(){
 	app.set('port', process.env.PORT || 3000)
@@ -39,6 +39,10 @@ app.configure('development', function(){
 	app.use(express.errorHandler())
 })
 
+io.sockets.on('connection', function( socket ) {
+	console.log( "New connection from " + socket )
+})
+
 app.get('/', function(req, res) {
 	res.render('index', 
 		{ title: 'Jobs',
@@ -60,10 +64,15 @@ app.get('/update', function( req, res ) {
 	res.redirect('/')
 })
 
-http.createServer(app).listen(app.get('port'), function(){
+jobHandler.setCallback( broadcastNews )
+jobHandler.updateJobs()
+
+server.listen(app.get('port'), function(){
 	console.log("Express server listening on port " + app.get('port'))
 	//process.setuid(config.uid)
 	//process.setgid(config.gid)
 })
 
-jobHandler.updateJobs()
+function broadcastNews( data ) {
+	io.sockets.emit( 'news', data )
+}
