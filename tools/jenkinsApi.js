@@ -94,22 +94,25 @@ API.getMsg = function( json, callback ) {
 		msg2 = changes.slice( 3 ).join( linebreak )
 	}
 	
-	// user overrides changes ...
-	if( user.length > 0 && branch.length ){
-		msg = user + " built " + branch
-		if( node.length > 0 )
-			msg += " on " + node
-	}
-
-	if( json.fullDisplayName && typeof json.fullDisplayName === 'string' )
-		name = json.fullDisplayName
-	
 	if( json.result && typeof json.result === 'string' )
 		status = json.result.toLowerCase()
 	else if( json.building && json.building === true ) {
 		status = "building"
 		if( msg === '' ) msg = "Building ..."
 	}
+	
+	// user overrides changes ...
+	if( user.length > 0 && branch.length ){
+		var verb = " built "
+		if( json.building )
+			verb = " is building "
+		msg = user + verb + branch
+		if( node.length > 0 )
+			msg += " on " + node
+	}
+
+	if( json.fullDisplayName && typeof json.fullDisplayName === 'string' )
+		name = json.fullDisplayName
 	
 	if( json.timestamp && typeof json.timestamp === 'string' )
 		timestamp = json.timestamp
