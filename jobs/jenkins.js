@@ -18,14 +18,16 @@ function jenkinsJob( config ) {
 	this.func = function( callback ) {
 		request( config.url.replace( /(http:\/\/)/, "$1" + config.user + ":" + config.pass + "@" ) + "/lastBuild/api/json"
 			, function( err, resp, body ) {
-			if(!err && resp.statusCode == 200 ) {
-				jenkinsApi.getMsg( JSON.parse( body ), function(data) { callback( null, data ) } )
-			}
-			if( resp.statusCode != 200 ) {
-				this.msg = "Error fetching data: " + resp.statusCode
-				this.status = "failure"
-				callback( null, { msg: this.msg, status: this.status, timestamp: new Date() } )
-			}
+				if( ! err ) {
+					if(  resp.statusCode == 200 ) {
+						jenkinsApi.getMsg( JSON.parse( body ), function(data) { callback( null, data ) } )
+					}
+					if( resp.statusCode != 200 ) {
+						this.msg = "Error fetching data: " + resp.statusCode
+						this.status = "failure"
+						callback( null, { msg: this.msg, status: this.status, timestamp: new Date() } )
+					}
+				}
 		})
 	}
 
