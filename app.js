@@ -39,10 +39,6 @@ app.configure('development', function(){
 	app.use(express.errorHandler())
 })
 
-io.sockets.on('connection', function( socket ) {
-	console.log( "New connection from " + socket )
-})
-
 app.get('/', function(req, res) {
 	res.render('index', 
 		{ title: 'Jobs',

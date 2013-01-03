@@ -19,7 +19,7 @@ function jenkinsJob( config ) {
 		request( config.url.replace( /(http:\/\/)/, "$1" + config.user + ":" + config.pass + "@" ) + "/lastBuild/api/json"
 			, function( err, resp, body ) {
 				if( ! err ) {
-					if(  resp.statusCode == 200 ) {
+					if( resp.statusCode == 200 && body.length > 0 ) {
 						jenkinsApi.getMsg( JSON.parse( body ), function(data) { callback( null, data ) } )
 					}
 					if( resp.statusCode != 200 ) {
