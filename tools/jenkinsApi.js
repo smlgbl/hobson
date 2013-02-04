@@ -102,13 +102,17 @@ API.getMsg = function( json, callback ) {
 	}
 	
 	// user overrides changes ...
-	if( user.length > 0 && branch.length ){
+	if( user.length && branch.length ){
 		var verb = " built ";
 		if( json.building )
 			verb = " is building ";
 		msg = user + verb + branch;
 		if( node.length > 0 )
 			msg += " on " + node;
+	}
+
+	if( ! msg.length && user.length ) {
+		msg = user;
 	}
 
 	if( json.fullDisplayName && typeof json.fullDisplayName === 'string' )

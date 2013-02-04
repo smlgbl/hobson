@@ -44,6 +44,9 @@ function jenkinsJob( config ) {
 						this.status = "failure";
 						callback( null, { name: self.name, msg: self.msg, status: self.status, timestamp: new Date() } );
 					}
+				} else {
+					console.log( "Error from " + self.name );
+					console.log( err );
 				}
 		})
 	}
@@ -77,11 +80,13 @@ function getJobsFromConfig( config ) {
 										}
 									});
 								});
+							} else {
+								console.log( "Error in config. config.jobs is neither 'all' nor non-empty Array!");
 							}
 						}
+					} else {
+						console.log( "Error in request " + err );
 					}
-				} else {
-					console.log( "Error in request: " + err );
 				}
 			}
 	);
