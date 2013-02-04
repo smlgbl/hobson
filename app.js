@@ -60,6 +60,10 @@ app.get('/update', function( req, res ) {
 	res.redirect('/')
 })
 
+process.on('uncaughtException', function(err) {
+  console.error(err.stack);
+})
+
 jobHandler.setCallback( broadcastNews )
 jobHandler.updateJobs()
 

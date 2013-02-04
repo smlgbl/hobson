@@ -5,10 +5,10 @@ var Jobs = []
 module.exports = Jobs
 
 configs.forEach( function( config, index, array ) {
-	Jobs.push( new puppetJob( config ) )
+	Jobs.push( new sshJob( config ) )
 })
 
-function puppetJob( config ) {
+function sshJob( config ) {
 	this.name = config.host
 	this.msg = "Checking status ..."
 	this.enabled = true
@@ -20,7 +20,7 @@ function puppetJob( config ) {
 		} )
 
 		client.connect( function() {
-			client.exec('ls', function( err, out ) {
+			client.exec('uptime', function( err, out ) {
 				if( err ) {
 					this.status = 'failure'
 					this.msg = err
@@ -29,7 +29,7 @@ function puppetJob( config ) {
 					this.msg = out
 				}
 				client.close()
-				callback( null, { msg: msg, status: status } )
+				callback( null, { name: this.name, msg: msg, status: status } )
 			})
 		})
 	}
