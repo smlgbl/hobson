@@ -1,5 +1,5 @@
-var API = {}
-module.exports = API
+var API = {};
+module.exports = API;
 
 API.getMsg = function( json, callback ) {
 	var changes = [];
@@ -14,23 +14,23 @@ API.getMsg = function( json, callback ) {
 
 	// in our setup, the first two of these if's should be mutually exclusive ... I might be wrong, though
 	if( 
-		json.changeSet 
-		&& typeof json.changeSet === 'object' 
-		&& json.changeSet.items 
-		&& typeof json.changeSet.items === 'object' 
-		&& Array.isArray( json.changeSet.items )
+		json.changeSet &&
+		typeof json.changeSet === 'object' &&
+		json.changeSet.items &&
+		typeof json.changeSet.items === 'object' &&
+		Array.isArray( json.changeSet.items )
 	) {
 		json.changeSet.items.forEach( function( cs ) {
 			if( 
-				  cs.user 
-				  && typeof cs.user === 'string' 
+				cs.user &&
+				typeof cs.user === 'string' 
 			) {
 				cUser = cs.user;
 			} else if ( 
-				cs.author 
-				&& typeof cs.author === 'object' 
-				&& cs.author.fullName 
-				&& typeof cs.author.fullName === 'string' 
+				cs.author &&
+				typeof cs.author === 'object' &&
+				cs.author.fullName &&
+				typeof cs.author.fullName === 'string' 
 			) {
 				cUser = cs.author.fullName;
 			}
@@ -38,9 +38,9 @@ API.getMsg = function( json, callback ) {
 		});
 	}
 	if( 
-		json.actions 
-		&& typeof json.actions === 'object' 
-		&& Array.isArray( json.actions ) 
+		json.actions &&
+		typeof json.actions === 'object' &&
+		Array.isArray( json.actions ) 
 	) {
 		json.actions.forEach( function( xvalue ) {
 			Object.keys( xvalue ).forEach( function( m ) {
@@ -49,37 +49,38 @@ API.getMsg = function( json, callback ) {
 					case "parameters":
 						if( mvalue && Array.isArray( mvalue ) ) {
 							mvalue.forEach( function( yvalue ) {
-								if( yvalue 
-									&& yvalue.name 
-									&& ( yvalue.name == "SVN_BRANCH" || yvalue.name == "BRANCH" ) 
-									&& yvalue.value 
-									&& typeof yvalue.value 
+								if( yvalue &&
+									yvalue.name &&
+									( yvalue.name == "SVN_BRANCH" || yvalue.name == "BRANCH" ) &&
+									yvalue.value &&
+									typeof yvalue.value 
 								) {
-									  branch = yvalue.value.replace( /(branches\/)|(origin\/)/g, '' );
+									branch = yvalue.value.replace( /(branches\/)|(origin\/)/g, '' );
 								}
-							})
+							});
 						}
-						break
+						break;
 					case "causes":
-						if( mvalue && Array.isArray( mvalue ) ) {
+						if( mvalue &&
+							Array.isArray( mvalue ) ) {
 							mvalue.forEach( function( zvalue ) {
 								if( 
-									zvalue
-									&& zvalue.userName
-									&& typeof zvalue.userName === 'string'
+									zvalue &&
+									zvalue.userName &&
+									typeof zvalue.userName === 'string'
 								) {
 									user = zvalue.userName;
 								}
-							})
+							});
 						}
 						break;
 				}
 			});
 		});
 	}
-	if( json.builtOn
-		&& typeof json.builtOn === 'string'
-		&& json.builtOn.length > 0
+	if( json.builtOn &&
+		typeof json.builtOn === 'string' &&
+		json.builtOn.length > 0
 	) {
 		node = json.builtOn;
 	}
@@ -130,4 +131,4 @@ API.getMsg = function( json, callback ) {
 		status: status,
 		timestamp: timestamp
 	} );
-}
+};

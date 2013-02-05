@@ -1,7 +1,7 @@
-var request = require('request')
-, jenkinsApi = require('../tools/jenkinsApi')
-, configs = require('./config' + __filename.substring( __filename.lastIndexOf("/") ))
-, commonJobInfoUrl = '/api/json';
+var request = require('request');
+var jenkinsApi = require('../tools/jenkinsApi');
+var configs = require('./config' + __filename.substring( __filename.lastIndexOf("/") ));
+var commonJobInfoUrl = '/api/json';
 
 var jen = {};
 jen.setNewJobCallback = setNewJobCallback;
@@ -33,8 +33,7 @@ function jenkinsJob( config ) {
 	this.interval = config.interval;
 	var self = this;
 	this.func = function( callback ) {
-		request( self.url.replace( /(http:\/\/)/, "$1" + config.user + ":" + config.pass + "@" ) + "lastBuild/api/json"
-			, function( err, resp, body ) {
+		request( self.url.replace( /(http:\/\/)/, "$1" + config.user + ":" + config.pass + "@" ) + "lastBuild/api/json", function( err, resp, body ) {
 				if( ! err ) {
 					if( resp.statusCode == 200 && body.length > 0 ) {
 						jenkinsApi.getMsg( JSON.parse( body ), function(data) { callback( null, data ); } );
@@ -48,9 +47,8 @@ function jenkinsJob( config ) {
 					console.log( "Error from " + self.name );
 					console.log( err );
 				}
-		})
-	}
-
+		});
+	};
 }
 
 function getJobsFromConfig( config ) {

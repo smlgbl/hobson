@@ -2,10 +2,8 @@ var fs = require('fs');
 var jobHandler = {};
 jobHandler.jobs = [];
 jobHandler.updateJobs = updateJobsFromFile;
-//jobHandler.getJobById = getJobById;
 jobHandler.callback = function() {};
 jobHandler.setCallback = setCallback;
-//jobHandler.addJob = addJob;
 
 module.exports = jobHandler;
 
@@ -24,7 +22,7 @@ function unrequire( moduleName ) {
 }
 
 function selectJobs( err, files ) {
-	jobHandler.jobs = []
+	jobHandler.jobs = [];
 	files.forEach( function( file ) {
 		if( file.substr( file.indexOf('.'), file.length ) == ".js" ) {
 			console.log( "Reading file " + file );
@@ -52,7 +50,7 @@ function selectJobs( err, files ) {
 			} catch(err) {
 				console.log("Error loading " + file);
 				console.log( err );
-				return
+				return;
 			}
 		}
 	});
@@ -62,7 +60,7 @@ function addJobExec( job, index ) {
 	if( job.func ) {
 		job.func( callbackWrapper( index ) );
 		if( job.interval ) {
-			if( job.intervalId ) clearInterval( job.intervalId )
+			if( job.intervalId ) clearInterval( job.intervalId );
 				job.intervalId = setInterval( job.func, job.interval, callbackWrapper( index ) );
 		}
 	}
@@ -89,19 +87,21 @@ function callbackWrapper( jobNo ) {
 			Object.keys( data ).forEach( function( key ) {
 				var oldData = jobHandler.jobs[ jobNo ][ key ];
 				var newData = data[ key ];
-				if( newData && (
-					( ! oldData && newData.length ) 
-					|| ( oldData && oldData != newData && newData.length ) ) ) {
-						news = true;
-						jobHandler.jobs[ jobNo ][ key ] = newData;
-					}
+				if( newData &&
+					( ( ! oldData && newData.length ) ||
+						( oldData && oldData != newData &&
+						newData.length ) ) ) 
+				{
+					news = true;
+					jobHandler.jobs[ jobNo ][ key ] = newData;
+				}
 			});
 			if( news )
 				jobHandler.callback( jobHandler.jobs[ jobNo ] );
 		} else {
 			console.log( "Error in callbackWrapper: " + err );
 		}
-	}
+	};
 }
 
 function getJobById( id, callback ) {
@@ -113,6 +113,6 @@ function getJobById( id, callback ) {
 				callback( job );
 				return true;
 			}
-		})
+		});
 	}
 }
