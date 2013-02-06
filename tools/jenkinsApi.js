@@ -42,36 +42,41 @@ API.getMsg = function( json, callback ) {
 		typeof json.actions === 'object' &&
 		Array.isArray( json.actions ) 
 	) {
-		json.actions.forEach( function( xvalue ) {
-			Object.keys( xvalue ).forEach( function( m ) {
-				var mvalue = xvalue[ m ];
-				switch( m ) {
+		json.actions.forEach( function( actionArray ) {
+			Object.keys( actionArray ).forEach( function( action ) {
+				var actionValue = actionArray[ action ];
+				switch( action ) {
 					case "parameters":
-						if( mvalue && Array.isArray( mvalue ) ) {
-							mvalue.forEach( function( yvalue ) {
-								if( yvalue &&
-									yvalue.name &&
-									( yvalue.name == "SVN_BRANCH" || yvalue.name == "BRANCH" ) &&
-									yvalue.value &&
-									typeof yvalue.value 
+						if( actionValue && Array.isArray( actionValue ) ) {
+							actionValue.forEach( function( actionParam ) {
+								if( actionParam &&
+									actionParam.name &&
+									( actionParam.name == "SVN_BRANCH" || actionParam.name == "BRANCH" ) &&
+									actionParam.value &&
+									typeof actionParam.value 
 								) {
-									branch = yvalue.value.replace( /(branches\/)|(origin\/)/g, '' );
+									branch = actionParam.value.replace( /(branches\/)|(origin\/)/g, '' );
 								}
 							});
 						}
 						break;
 					case "causes":
-						if( mvalue &&
-							Array.isArray( mvalue ) ) {
-							mvalue.forEach( function( zvalue ) {
-								if( 
-									zvalue &&
-									zvalue.userName &&
-									typeof zvalue.userName === 'string'
-								) {
-									user = zvalue.userName;
-								}
-							});
+						if( actionValue &&
+							Array.isArray( actionValue ) ) {
+								actionValue.forEach( function( actionParam ) {
+									if( actionParam ) {
+										if( actionParam.userName &&
+											typeof actionParam.userName === 'string'
+										) {
+											user = actionParam.userName;
+											} else if( actionParam.shortDescription &&
+												typeof actionParam.shortDescription === 'string' &&
+												actionParam.shortDescription == 'Started by timer'
+											) {
+												user = actionParam.shortDescription;
+											}
+									}
+								});
 						}
 						break;
 				}
@@ -102,7 +107,7 @@ API.getMsg = function( json, callback ) {
 		if( msg === '' ) msg = "Building ...";
 	}
 	
-	// user overrides changes ...
+	// user overrides changes if a branch was found ...
 	if( user.length && branch.length ){
 		var verb = " built ";
 		if( json.building )
@@ -114,6 +119,8 @@ API.getMsg = function( json, callback ) {
 
 	if( ! msg.length && user.length ) {
 		msg = user;
+		if (json.building)
+			msg += " [building]";
 	}
 
 	if( json.fullDisplayName && typeof json.fullDisplayName === 'string' )
