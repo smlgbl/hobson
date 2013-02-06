@@ -68,13 +68,12 @@ function getJobsFromConfig( config ) {
 								});
 							} else if( typeof config.jobs === 'object' && config.jobs.length > 0 ) {
 								config.jobs.forEach( function( jobName ) {
-									jenkinsInfo.jobs.some( function( j ) {
-										if( j.name == jobName ) {
+									jenkinsInfo.jobs.forEach( function( j ) {
+										if( j.name.toLowerCase().indexOf( jobName.toLowerCase() ) >= 0 ) {
 											var c = config;
 											c.url = j.url;
 											c.name = j.name;
 											addJob( new jenkinsJob( c ) );
-											return true;
 										}
 									});
 								});
