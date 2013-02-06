@@ -12,11 +12,12 @@ var newJobCallback = function() {
 };
 
 function setNewJobCallback( callback ) {
-	console.log("Setting callback");
 	newJobCallback = callback;
 }
 
 configs.forEach( function( config ) {
+	if( ! config.interval ) config.interval = 30000;
+	if( ! config.enabled ) config.enabled = true;
 	getJobsFromConfig( config );
 });
 
@@ -25,15 +26,19 @@ function addJob( config ) {
 	newJobCallback( config );
 }
 
-function jenkinsJob( config ) {
-	this.name = config.name; //config.url.substring( config.url.lastIndexOf("/" + 1 ))
+function JenkinsJob( config ) {
+	this.name = config.name;
 	this.url = config.url;
+	if( config.user && config.pass )
+		this.jUrl = config.url.replace( /(http:\/\/)/, "$1" + config.user + ":" + config.pass + "@" );
+	else
+		this.jUrl = config.url;
 	this.msg = "Checking status ...";
 	this.enabled = config.enabled;
 	this.interval = config.interval;
 	var self = this;
 	this.func = function( callback ) {
-		request( self.url.replace( /(http:\/\/)/, "$1" + config.user + ":" + config.pass + "@" ) + "lastBuild/api/json", function( err, resp, body ) {
+		request( self.jUrl + "lastBuild/api/json", function( err, resp, body ) {
 				if( ! err ) {
 					if( resp.statusCode == 200 && body.length > 0 ) {
 						jenkinsApi.getMsg( JSON.parse( body ), function(data) { callback( null, data ); } );
@@ -44,7 +49,7 @@ function jenkinsJob( config ) {
 						callback( null, { name: self.name, msg: self.msg, status: self.status, timestamp: new Date() } );
 					}
 				} else {
-					console.log( "Error from " + self.name );
+					console.log( "Error from " + self.name + ", url: " + self.jUrl );
 					console.log( err );
 				}
 		});
@@ -52,7 +57,12 @@ function jenkinsJob( config ) {
 }
 
 function getJobsFromConfig( config ) {
-	request( config.url.replace( /(http:\/\/)/, "$1" + config.user + ":" + config.pass + "@" ) + commonJobInfoUrl,
+	var url;
+	if( config.user && config.pass )
+		url = config.url.replace( /(http:\/\/)/, "$1" + config.user + ":" + config.pass + "@" );
+	else
+		url = config.url;
+	request( url + commonJobInfoUrl,
 			function( err, resp, body ) {
 				if( ! err ) {
 					if( resp.statusCode == 200 && body.length > 0 ) {
@@ -64,7 +74,7 @@ function getJobsFromConfig( config ) {
 									var c = config;
 									c.url = j.url;
 									c.name = j.name;
-									addJob( new jenkinsJob( c ) );
+									addJob( new JenkinsJob( c ) );
 								});
 							} else if( typeof config.jobs === 'object' && config.jobs.length > 0 ) {
 								config.jobs.forEach( function( jobName ) {
@@ -73,7 +83,7 @@ function getJobsFromConfig( config ) {
 											var c = config;
 											c.url = j.url;
 											c.name = j.name;
-											addJob( new jenkinsJob( c ) );
+											addJob( new JenkinsJob( c ) );
 										}
 									});
 								});

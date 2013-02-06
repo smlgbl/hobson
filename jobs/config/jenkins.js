@@ -1,26 +1,26 @@
 module.exports = [
+// minimal config to display status of all, no auth
 {
-	user: 'username',
-	pass: 'password',
 	url: 'http://jenkins.example.com/jenkins/',
-	jobs: [ 'Jobname_1', 'Jobname_2' ],
-	enabled: true,
-	interval: 30000
+	jobs: 'all'
 },
+// config incl. auth
 {
 	user: 'username',
 	pass: 'password',
 	url: 'http://ci.example.com/',
-	jobs: 'all',
-	enabled: true,
-	interval: 30000
+	jobs: 'all'
 },
+// change request interval
 {
-	user: 'username',
-	pass: 'password',
 	url: 'http://ci.example2.com/',
 	jobs: [ 'test', 'deploy' ],
-	enabled: true,
 	interval: 30000
+},
+// disable temporarily
+{
+	url: 'http://ci.example2.com/',
+	jobs: [ 'deploy-me' ],
+	enabled: false
 }
-]
+];
