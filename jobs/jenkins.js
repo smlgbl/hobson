@@ -17,7 +17,7 @@ function setNewJobCallback( callback ) {
 
 configs.forEach( function( config ) {
 	if( ! config.interval ) config.interval = 30000;
-	if( ! config.enabled ) config.enabled = true;
+	if( config.enabled !== false ) config.enabled = true;
 	getJobsFromConfig( config );
 });
 
