@@ -101,9 +101,11 @@ API.getMsg = function( json, callback ) {
 		msg2 = changes.slice( 3 ).join( linebreak );
 	}
 	
-	if( json.result && typeof json.result === 'string' )
+	if( json.result && typeof json.result === 'string' ) {
 		status = json.result.toLowerCase();
-	else if( json.building && json.building === true ) {
+		if( status === 'aborted' ) 
+			msg = "Aborted";
+	} else if( json.building && json.building === true ) {
 		status = "building";
 		if( msg === '' ) msg = "Building ...";
 	}

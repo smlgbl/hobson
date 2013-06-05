@@ -14,12 +14,13 @@ body {
 
 h1 {
   margin: 0;
-  padding: 0;
+  padding: 10px;
   line-height: 1.2em;
   font-family: 'Yanone Kaffeesatz', sans-serif;
-  font-size: 240%;
+  font-size: 200%;
   white-space: nowrap;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 p {
@@ -56,6 +57,11 @@ a {
 
 .success strong {
   color: #060;
+}
+
+.aborted {
+  color: black;
+  background-color: grey;
 }
 
 .failure {
