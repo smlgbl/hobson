@@ -41,10 +41,7 @@ function selectJobs( err, files ) {
 						newJobs = [ newJobs ];
 					}
 					if( newJobs.length ) {
-						newJobs.forEach( function( job ) {
-							console.log( "Adding Job from Array: " + job.name + " - " + file );
-							addJob( job );
-						});
+						newJobs.forEach( addJob );
 					}
 				}
 			} catch(err) {
@@ -70,6 +67,7 @@ function addJob( job ) {
 	if( job.enabled ) {
 		job.id = jobHandler.jobs.push( job ) - 1;
 		addJobExec( job, job.id );
+		console.log( "Adding Job: " + job.name );
 	}
 }
 

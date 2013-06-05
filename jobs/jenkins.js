@@ -1,7 +1,8 @@
 var request = require('request');
+var extend = require('util')._extend;
 var jenkinsApi = require('../tools/jenkinsApi');
-var configs = require('./config' + __filename.substring( __filename.lastIndexOf("/") ));
 var commonJobInfoUrl = '/api/json';
+var configLocation = './config' + __filename.substring( __filename.lastIndexOf("/") );
 
 var jen = {};
 jen.setNewJobCallback = setNewJobCallback;
@@ -13,16 +14,26 @@ var newJobCallback = function() {
 
 function setNewJobCallback( callback ) {
 	newJobCallback = callback;
+	start();
 }
 
-configs.forEach( function( config ) {
-	if( ! config.interval ) config.interval = 30000;
-	if( config.enabled !== false ) config.enabled = true;
-	getJobsFromConfig( config );
-});
+function unrequire( moduleName ) {
+	var jobDefName = require.resolve(moduleName);
+	delete require.cache[ jobDefName ];
+}
+
+function start() {
+	var configs = require(configLocation);
+	console.log("Got " + configs.length + " configs");
+	configs.forEach( function( config ) {
+		console.log("start for: " + config.url);
+		if( ! config.interval ) config.interval = 30000;
+		if( config.enabled !== false ) config.enabled = true;
+		getJobsFromConfig( config );
+	});
+}
 
 function addJob( config ) {
-	console.log( "Adding Job " + config.name );
 	newJobCallback( config );
 }
 
@@ -69,18 +80,18 @@ function getJobsFromConfig( config ) {
 						var jenkinsInfo = JSON.parse( body );
 						if( jenkinsInfo.jobs && jenkinsInfo.jobs.length > 0 ) {
 							console.log( "Getting jobs from " + config.url );
-							if( typeof config.jobs === 'string' && config.jobs == 'all' ) {
+							if( typeof config.jobs === 'string' && config.jobs === 'all' ) {
 								jenkinsInfo.jobs.forEach( function( j ) {
-									var c = config;
+									var c = extend({}, config);
 									c.url = j.url;
 									c.name = j.name;
 									addJob( new JenkinsJob( c ) );
 								});
-							} else if( typeof config.jobs === 'object' && config.jobs.length > 0 ) {
+							} else if( typeof config.jobs === 'object' && config.jobs.length ) {
 								config.jobs.forEach( function( jobName ) {
 									jenkinsInfo.jobs.forEach( function( j ) {
 										if( j.name.toLowerCase().indexOf( jobName.toLowerCase() ) >= 0 ) {
-											var c = config;
+											var c = extend({}, config);
 											c.url = j.url;
 											c.name = j.name;
 											addJob( new JenkinsJob( c ) );

@@ -57,7 +57,8 @@ app.get('/detail/:id', function( req, res ) {
 
 app.get('/update', function( req, res ) {
 	jobHandler.updateJobs();
-	res.redirect('/');
+	function goHome() { res.redirect('/'); }
+	setTimeout(goHome, 1000);
 });
 
 process.on('uncaughtException', function(err) {

@@ -43,6 +43,7 @@ API.getMsg = function( json, callback ) {
 		Array.isArray( json.actions ) 
 	) {
 		json.actions.forEach( function( actionArray ) {
+			if( actionArray === null ) return;
 			Object.keys( actionArray ).forEach( function( action ) {
 				var actionValue = actionArray[ action ];
 				switch( action ) {
