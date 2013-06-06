@@ -1,8 +1,9 @@
+var fs = require('fs');
 var request = require('request');
 var extend = require('util')._extend;
 var jenkinsApi = require('../tools/jenkinsApi');
 var commonJobInfoUrl = '/api/json';
-var configLocation = './config' + __filename.substring( __filename.lastIndexOf("/") );
+var configLocation = './jobs/config' + __filename.substring( __filename.lastIndexOf("/") );
 
 var jen = {};
 jen.setNewJobCallback = setNewJobCallback;
@@ -17,19 +18,15 @@ function setNewJobCallback( callback ) {
 	start();
 }
 
-function unrequire( moduleName ) {
-	var jobDefName = require.resolve(moduleName);
-	delete require.cache[ jobDefName ];
-}
-
 function start() {
-	var configs = require(configLocation);
-	console.log("Got " + configs.length + " configs");
-	configs.forEach( function( config ) {
-		console.log("start for: " + config.url);
-		if( ! config.interval ) config.interval = 30000;
-		if( config.enabled !== false ) config.enabled = true;
-		getJobsFromConfig( config );
+	readConfigFile( configLocation, function( configs ) {
+		console.log("Got " + configs.length + " configs");
+		configs.forEach( function( config ) {
+			console.log("start for: " + config.url);
+			if( ! config.interval ) config.interval = 30000;
+			if( config.enabled !== false ) config.enabled = true;
+			getJobsFromConfig( config );
+		});
 	});
 }
 
@@ -108,4 +105,14 @@ function getJobsFromConfig( config ) {
 				}
 			}
 	);
+}
+
+function readConfigFile(configFile, callback) {
+	fs.readFile(configFile, 'utf8', function(err, data) {
+		if(err) {
+			console.log('Error: ' + err);
+			return;
+		}
+		callback( JSON.parse(data) );
+	});
 }
