@@ -43,45 +43,46 @@ API.getMsg = function( json, callback ) {
 		Array.isArray( json.actions ) 
 	) {
 		json.actions.forEach( function( actionArray ) {
-			if( actionArray === null ) return;
-			Object.keys( actionArray ).forEach( function( action ) {
-				var actionValue = actionArray[ action ];
-				switch( action ) {
+			if( actionArray !== null && typeof actionArray === 'object' && ( actionArray.parameters || actionArray.causes )) {
+				Object.keys( actionArray ).forEach( function( action ) {
+					var actionValue = actionArray[ action ];
+					switch( action ) {
 					case "parameters":
-						if( actionValue && Array.isArray( actionValue ) ) {
-							actionValue.forEach( function( actionParam ) {
-								if( actionParam &&
-									actionParam.name &&
-									( actionParam.name == "SVN_BRANCH" || actionParam.name == "BRANCH" ) &&
-									actionParam.value &&
-									typeof actionParam.value 
-								) {
-									branch = actionParam.value.replace( /(branches\/)|(origin\/)/g, '' );
-								}
-							});
+					if( actionValue && Array.isArray( actionValue ) ) {
+					actionValue.forEach( function( actionParam ) {
+						if( actionParam &&
+							actionParam.name &&
+							( actionParam.name == "SVN_BRANCH" || actionParam.name == "BRANCH" ) &&
+							actionParam.value &&
+							typeof actionParam.value 
+						  ) {
+						branch = actionParam.value.replace( /(branches\/)|(origin\/)/g, '' );
 						}
-						break;
+						});
+					}
+					break;
 					case "causes":
-						if( actionValue &&
-							Array.isArray( actionValue ) ) {
-								actionValue.forEach( function( actionParam ) {
-									if( actionParam ) {
-										if( actionParam.userName &&
-											typeof actionParam.userName === 'string'
-										) {
-											user = actionParam.userName;
-											} else if( actionParam.shortDescription &&
-												typeof actionParam.shortDescription === 'string' &&
-												actionParam.shortDescription == 'Started by timer'
-											) {
-												user = actionParam.shortDescription;
-											}
-									}
-								});
+					if( actionValue &&
+						Array.isArray( actionValue ) ) {
+					actionValue.forEach( function( actionParam ) {
+						if( actionParam ) {
+						if( actionParam.userName &&
+							typeof actionParam.userName === 'string'
+						  ) {
+						user = actionParam.userName;
+						} else if( actionParam.shortDescription &&
+							typeof actionParam.shortDescription === 'string' &&
+							actionParam.shortDescription == 'Started by timer'
+							) {
+						user = actionParam.shortDescription;
 						}
-						break;
-				}
-			});
+						}
+						});
+					}
+					break;
+					}
+				});
+			}
 		});
 	}
 	if( json.builtOn &&
