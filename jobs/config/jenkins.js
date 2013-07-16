@@ -1,26 +1,18 @@
-module.exports = [
-// minimal config to display status of all, no auth
+[
 {
-	url: 'http://jenkins.example.com/jenkins/',
-	jobs: 'all'
+  "url": "http://ci.example.com/simpleExampleDisabled",
+  "jobs": "all",
+  "enabled": false
 },
-// config incl. auth
 {
-	user: 'username',
-	pass: 'password',
-	url: 'http://ci.example.com/',
-	jobs: 'all'
+  "url": "http://ci.example2.com/exampleWithJobDefinitionsDisabled",
+  "jobs": [ "TestMeJob", "OtherJob-" ],
+  "user": "username",
+  "pass": "password",
+  "enabled": false
 },
-// change request interval
 {
-	url: 'http://ci.example2.com/',
-	jobs: [ 'test', 'deploy' ],
-	interval: 30000
-},
-// disable temporarily
-{
-	url: 'http://ci.example2.com/',
-	jobs: [ 'deploy-me' ],
-	enabled: false
+  "url": "https://builds.apache.org",
+  "jobs": [ "cloudstack-" ]
 }
-];
+]
