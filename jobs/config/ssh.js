@@ -1,10 +1,10 @@
 module.exports = [
 {
 	user: 'samuel.gabel',
-	host: 'ci01.test-a-team.com'
+	host: 'ssh-server.example.com'
 },
 {
 	user: 'samuel.gabel',
-	host: 'wib-ci'
+	host: 'ssh-server2.example.com'
 }
 ]
